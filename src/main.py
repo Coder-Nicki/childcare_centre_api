@@ -7,6 +7,6 @@ def create_app():
 
     @app.route("/")
     def hello():
-        return {"message" : "Hello everyone"}
+        return {"message" : "Welcome to my project"}
 
     return app
