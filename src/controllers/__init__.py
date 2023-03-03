@@ -1,6 +1,6 @@
-from controllers.users_controller import users
+from controllers.home_controller import home
 
 
 registerable_controllers = [
-    users
+    home
 ]

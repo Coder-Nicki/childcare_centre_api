@@ -18,9 +18,9 @@ def create_app():
     db.init_app(app)
     ma.init_app(app)
 
+    from controllers import registerable_controllers
+    for controllers in registerable_controllers:
+        app.register_blueprint(controllers)
 
-    @app.route("/")
-    def hello():
-        return {"message" : "Welcome to my project"}
 
     return app
