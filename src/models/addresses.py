@@ -1,3 +1,5 @@
+from main import db
+
 class Address(db.Model):
 
     __tablename__ = "addresses"

@@ -1,3 +1,5 @@
+from main import db
+
 class Childcare_Centre(db.Model):
 
     __tablename__ = "childcare_centres"
