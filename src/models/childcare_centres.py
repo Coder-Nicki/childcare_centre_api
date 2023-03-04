@@ -1,6 +1,6 @@
 from main import db
 
-class Childcare_Centre(db.Model):
+class ChildcareCentre(db.Model):
 
     __tablename__ = "childcare_centres"
 

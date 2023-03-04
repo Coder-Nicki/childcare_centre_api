@@ -5,10 +5,21 @@ from main import db
 
 user = Blueprint('user', __name__, url_prefix='/users')
 
+
 @user.get('/')
 def get_users():
     users = User.query.all()
-    return user_schema.dump(users)
+    return users_schema.dump(users)
+
+
+@user.get('/<int:id>')
+def get_user(id):
+    user = User.query.get(id)
+
+    if not user:
+        return { "message" : "No user"}
+
+    return user_schema.dump(user)
 
 
 @user.post("/")
