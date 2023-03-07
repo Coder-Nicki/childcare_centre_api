@@ -9,3 +9,4 @@ class Review(db.Model):
     parent_rating = db.Column(db.Integer())
     date_posted = db.Column(db.Date())
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=False)
+    childcare_centre_id = db.Column(db.Integer(), db.ForeignKey("childcare_centres.id"), nullable=False)
