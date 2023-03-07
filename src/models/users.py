@@ -10,4 +10,4 @@ class User(db.Model):
     admin = db.Column(db.Boolean(), default=False)
     email = db.Column(db.String())
 
-    # user = db.relationship('User', backref='childcare_centres')
+    childcare_centre = db.relationship('ChildcareCentre', backref='user')
