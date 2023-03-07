@@ -12,6 +12,16 @@ def get_childcare_centres():
     return childcare_centres_schema.dump(childcare_centres)
 
 
+@childcare_centre.get('/<int:id>')
+def get_childcare_centre(id):
+    childcare_centre = ChildcareCentre.query.get(id)
+
+    if not childcare_centre:
+        return { "message" : "No childcare listed"}
+
+    return childcare_centre_schema.dump(childcare_centre)
+
+
 @childcare_centre.post("/")
 def create_childcare_centre():
     # try: 

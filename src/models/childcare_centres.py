@@ -12,3 +12,5 @@ class ChildcareCentre(db.Model):
     email_address = db.Column(db.String())
     description = db.Column(db.String())
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=False)
+
+    

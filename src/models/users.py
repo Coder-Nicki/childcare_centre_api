@@ -9,3 +9,5 @@ class User(db.Model):
     password = db.Column(db.String(), nullable=False)
     admin = db.Column(db.Boolean(), default=False)
     email = db.Column(db.String())
+
+    # user = db.relationship('User', backref='childcare_centres')
