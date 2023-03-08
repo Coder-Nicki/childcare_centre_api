@@ -13,8 +13,7 @@ class ChildcareCentre(db.Model):
     description = db.Column(db.String())
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=False)
 
-    user = db.relationship('User', backref='childcare_centre')
-
     review = db.relationship('Review', backref='childcare_centre')
+    address = db.relationship('Address', backref='childcare_centre')
 
     
