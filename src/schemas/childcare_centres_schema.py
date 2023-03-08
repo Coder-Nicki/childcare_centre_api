@@ -5,7 +5,7 @@ class ChildcareCentreSchema(ma.Schema):
         fields = ("id", "name", "cost_per_day", "maximum_capacity", "phone_number", "email_address", "description", "user", "user_id")
         load_only = ["user_id"]
 
-    user = ma.Nested("UserSchema")
+    user = ma.Nested("UserSchema", exclude=["childcare_centre"])
 
 
 childcare_centre_schema = ChildcareCentreSchema()
