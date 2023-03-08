@@ -24,16 +24,16 @@ def get_childcare_centre(id):
 
 @childcare_centre.post("/")
 def create_childcare_centre():
-    try: 
-        childcare_centre_fields = childcare_centre_schema.load(request.json)
+    # try: 
+    childcare_centre_fields = childcare_centre_schema.load(request.json)
 
-        childcare_centre = ChildcareCentre(**childcare_centre_fields)
+    childcare_centre = ChildcareCentre(**childcare_centre_fields)
 
         
-        db.session.add(childcare_centre)
-        db.session.commit()
+    db.session.add(childcare_centre)
+    db.session.commit()
 
-    except:
-        return { "message" : "Your information is incorrect"}
+    # except:
+    #     return { "message" : "Your information is incorrect"}
 
     return childcare_centre_schema.dump(childcare_centre)
