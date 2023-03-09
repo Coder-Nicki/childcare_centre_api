@@ -2,6 +2,8 @@ from flask import Blueprint, request
 from models.childcare_centres import ChildcareCentre
 from schemas.childcare_centres_schema import childcare_centre_schema, childcare_centres_schema
 from main import db
+from datetime import date
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 childcare_centre = Blueprint('childcare_centre', __name__, url_prefix="/childcare_centres")
 
@@ -23,6 +25,7 @@ def get_childcare_centre(id):
 
 
 @childcare_centre.post("/")
+@jwt_required()
 def create_childcare_centre():
     # try: 
     childcare_centre_fields = childcare_centre_schema.load(request.json)

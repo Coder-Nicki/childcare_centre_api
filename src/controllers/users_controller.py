@@ -1,7 +1,10 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, abort, jsonify
 from models.users import User
 from schemas.users_schema import user_schema, users_schema
 from main import db
+from datetime import timedelta
+from main import bcrypt
+from flask_jwt_extended import create_access_token
 
 user = Blueprint('user', __name__, url_prefix='/users')
 
@@ -22,16 +25,72 @@ def get_user(id):
     return user_schema.dump(user)
 
 
-@user.post("/")
-def create_user():
-    # try: 
-    user_fields = user_schema.load(request.json)
+@user.route("/register", methods=["POST"])
+def user_register():
 
-    user = User(**user_fields)
+    user_fields = user_schema.load(request.json)
+    # find the user
+    user = User.query.filter_by(email=user_fields["email"]).first()
+    username = User.query.filter_by(username=user_fields["username"]).first()
+
+    if user:
+        # return an abort message to inform the user. That will end the request
+        return abort(400, description="Email already registered")
+    if username:
+        return abort(400, description="Username already taken")
+
+    # Create the user object
+    user = User()
+    #Add the email attribute
+    user.username = user_fields["username"]
+    #Add the email attribute
+    user.email = user_fields["email"]
+    #Add the password attribute hashed by bcrypt
+    user.password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8")
+    #set the admin attribute to false
+    user.admin = False
+    #Add it to the database and commit the changes
     db.session.add(user)
     db.session.commit()
+    #create a variable that sets an expiry date
+    expiry = timedelta(days=1)
+    #create the access token
+    access_token = create_access_token(identity=str(user.id), expires_delta=expiry)
+    # return the user email and the access token
+    return jsonify({"username":user.username, "token": access_token })
 
-    # except:
-    #     return { "message" : "Your information is incorrect"}
 
-    return user_schema.dump(user)
+@user.route("/login", methods=["POST"])
+def user_login():
+
+    user_fields = user_schema.load(request.json)
+    #find the user in the database by email
+    user = User.query.filter_by(email=user_fields["email"]).first()
+    # there is not a user with that email or if the password is no correct send an error
+    if not user or not bcrypt.check_password_hash(user.password, user_fields["password"]):
+        return abort(401, description="Incorrect username and password")
+    
+    #create a variable that sets an expiry date
+    expiry = timedelta(days=1)
+    #create the access token
+    access_token = create_access_token(identity=str(user.id), expires_delta=expiry)
+    # return the user email and the access token
+    return jsonify({"username":user.username, "token": access_token })
+
+
+@user.route("/logout", methods=["DELETE"])
+def user_logout():
+
+    user_fields = user_schema.load(request.json)
+    #find the user in the database by email
+    user = User.query.filter_by(email=user_fields["email"]).first()
+    # there is not a user with that email or if the password is no correct send an error
+    if not user or not bcrypt.check_password_hash(user.password, user_fields["password"]):
+        return abort(401, description="Incorrect username and password")
+    
+    #create a variable that sets an expiry date
+    expiry = timedelta(days=1)
+    #create the access token
+    access_token = create_access_token(identity=str(user.id), expires_delta=expiry)
+    # return the user email and the access token
+    return jsonify({"username":user.username, "token": access_token })

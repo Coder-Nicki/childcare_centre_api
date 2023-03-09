@@ -2,6 +2,8 @@ from flask import Blueprint, request
 from models.reviews import Review
 from schemas.reviews_schema import review_schema, reviews_schema
 from main import db
+from datetime import date
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 review = Blueprint('review', __name__, url_prefix="/reviews")
 
@@ -23,6 +25,7 @@ def get_review(id):
 
 
 @review.post("/")
+@jwt_required()
 def create_review():
     try: 
         review_fields = review_schema.load(request.json)
