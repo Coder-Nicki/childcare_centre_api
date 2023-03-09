@@ -12,6 +12,7 @@ class ChildcareCentre(db.Model):
     email_address = db.Column(db.String())
     description = db.Column(db.String())
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=False)
+    # address_id = db.Column(db.Integer(), db.ForeignKey("addresses.id"), nullable=False)
 
     review = db.relationship('Review', backref='childcare_centre')
     address = db.relationship('Address', backref='childcare_centre')

@@ -24,6 +24,19 @@ def get_childcare_centre(id):
     return childcare_centre_schema.dump(childcare_centre)
 
 
+@childcare_centre.delete('/<int:id>')
+def delete_childcare_centre(id):
+    childcare_centre = ChildcareCentre.query.get(id)
+
+    if not childcare_centre:
+        return { "message" : "No childcare listed"}
+    
+    db.session.delete(childcare_centre)
+    db.session.commit()
+
+    return {"message" : "Childcare centre removed successfully"}
+
+
 @childcare_centre.post("/")
 @jwt_required()
 def create_childcare_centre():

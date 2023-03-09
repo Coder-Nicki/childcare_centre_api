@@ -12,4 +12,6 @@ class Address(db.Model):
     postcode = db.Column(db.String())
     childcare_centre_id = db.Column(db.Integer(), db.ForeignKey("childcare_centres.id"), nullable=False)
 
+
+
     
