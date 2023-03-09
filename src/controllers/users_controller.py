@@ -41,22 +41,22 @@ def user_register():
 
     # Create the user object
     user = User()
-    #Add the email attribute
+   
     user.username = user_fields["username"]
-    #Add the email attribute
+  
     user.email = user_fields["email"]
-    #Add the password attribute hashed by bcrypt
+  
     user.password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8")
-    #set the admin attribute to false
+   
     user.admin = False
-    #Add it to the database and commit the changes
+   
     db.session.add(user)
     db.session.commit()
     #create a variable that sets an expiry date
     expiry = timedelta(days=1)
     #create the access token
     access_token = create_access_token(identity=str(user.id), expires_delta=expiry)
-    # return the user email and the access token
+  
     return jsonify({"username":user.username, "token": access_token })
 
 
@@ -70,27 +70,14 @@ def user_login():
     if not user or not bcrypt.check_password_hash(user.password, user_fields["password"]):
         return abort(401, description="Incorrect username and password")
     
-    #create a variable that sets an expiry date
+   
     expiry = timedelta(days=1)
-    #create the access token
-    access_token = create_access_token(identity=str(user.id), expires_delta=expiry)
-    # return the user email and the access token
-    return jsonify({"username":user.username, "token": access_token })
-
-
-@user.route("/logout", methods=["DELETE"])
-def user_logout():
-
-    user_fields = user_schema.load(request.json)
-    #find the user in the database by email
-    user = User.query.filter_by(email=user_fields["email"]).first()
-    # there is not a user with that email or if the password is no correct send an error
-    if not user or not bcrypt.check_password_hash(user.password, user_fields["password"]):
-        return abort(401, description="Incorrect username and password")
     
-    #create a variable that sets an expiry date
-    expiry = timedelta(days=1)
-    #create the access token
     access_token = create_access_token(identity=str(user.id), expires_delta=expiry)
-    # return the user email and the access token
+
     return jsonify({"username":user.username, "token": access_token })
+
+
+@user.route("/logout")
+def user_logout():
+    pass
