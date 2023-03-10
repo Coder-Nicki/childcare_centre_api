@@ -8,13 +8,14 @@ from flask_jwt_extended import create_access_token
 
 user = Blueprint('user', __name__, url_prefix='/users')
 
-
+# Gets a list of all users and their details
 @user.get('/')
 def get_users():
     users = User.query.all()
     return users_schema.dump(users)
 
 
+# Queries the database for a specifed user according to user.id
 @user.get('/<int:id>')
 def get_user(id):
     user = User.query.get(id)
@@ -25,6 +26,7 @@ def get_user(id):
     return user_schema.dump(user)
 
 
+# Registers a new user and provides an access token
 @user.route("/register", methods=["POST"])
 def user_register():
 
@@ -48,7 +50,7 @@ def user_register():
   
     user.password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8")
    
-    user.admin = False
+    user.admin = user_fields["admin"]
    
     db.session.add(user)
     db.session.commit()
@@ -60,6 +62,7 @@ def user_register():
     return jsonify({"username":user.username, "token": access_token })
 
 
+# Logins an already existing user
 @user.route("/login", methods=["POST"])
 def user_login():
 
