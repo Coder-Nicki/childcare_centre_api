@@ -25,14 +25,36 @@ def get_childcare_centre(id):
     return childcare_centre_schema.dump(childcare_centre)
 
 
-# # Finds a childcare centre according to cost_per_day
-# @childcare_centre.get("/cost")
-# def get_childcare_address():
-#     # childcare_centre_fields = childcare_centres_schema.load(request.json)
-#     cost = ChildcareCentre.query.order_by(cost_per_day=cost_per_day).all()
+# Lists the childcare centres in order from cheapest to most expensive.
+@childcare_centre.get('/cost_range')
+def order_childcare_centre_by_cost():
+    cost_range = ChildcareCentre.query.order_by(ChildcareCentre.cost_per_day).all()
+    
+    return childcare_centres_schema.dump(cost_range)
 
-#     return jsonify(cost)
 
+# Gets the ccheapest childcare centres and returns childcare details.
+@childcare_centre.get('/cheapest')
+def get_cheapest_childcare_centre():
+    cheapest = ChildcareCentre.query.order_by(ChildcareCentre.cost_per_day).first()
+    
+    return childcare_centre_schema.dump(cheapest)
+
+
+# List the childcares that have a capacity under 50
+@childcare_centre.get('/small_centres')
+def get_small_centres():
+    small_centres = ChildcareCentre.query.filter(ChildcareCentre.maximum_capacity <= 50).order_by(ChildcareCentre.maximum_capacity).all()
+    
+    return childcare_centres_schema.dump(small_centres)
+
+
+# List the childcares that have a capacity under the searcher's specified limit.
+@childcare_centre.get('/maximum_capacity/<int:maximum_capacity>')
+def get_list_of_centres_under_capacity(maximum_capacity):
+    list_of_centres_under_capacity = ChildcareCentre.query.filter(ChildcareCentre.maximum_capacity <= maximum_capacity).order_by(ChildcareCentre.maximum_capacity).all()
+    
+    return childcare_centres_schema.dump(list_of_centres_under_capacity)
 
 # Creates a childcare centre post
 @childcare_centre.post("/")
@@ -42,8 +64,7 @@ def create_childcare_centre():
     childcare_centre_fields = childcare_centre_schema.load(request.json)
 
     childcare_centre = ChildcareCentre(**childcare_centre_fields)
-
-        
+    
     db.session.add(childcare_centre)
     db.session.commit()
 
@@ -62,7 +83,7 @@ def update_childcare_centre(id):
         return {"message": "No childcare centre listed"}
 
     childcare_centre_fields = childcare_centre_schema.load(request.json)
-    
+
     childcare_centre.name = childcare_centre_fields["name"]
     childcare_centre.cost_per_day = childcare_centre_fields["cost_per_day"]
     childcare_centre.maximum_capacity = childcare_centre_fields["maximum_capacity"]
@@ -72,9 +93,10 @@ def update_childcare_centre(id):
 
     db.session.commit()
 
-    return jsonify(childcare_centre_schema.dump(childcare_centre))
+    return childcare_centre_schema.dump(childcare_centre)
 
 # Deletes a childcare_centre post
+
 @childcare_centre.delete('/<int:id>')
 @jwt_required()
 def delete_childcare_centre(id):
