@@ -14,6 +14,12 @@ def get_users():
     users = User.query.all()
     return users_schema.dump(users)
 
+@user.get('/user_email')
+def get_user_email():
+    users = User.query.all()
+    list = users_schema.dump(users)
+    return jsonify(list[0]["email"])
+
 
 # Queries the database for a specifed user according to user.id
 @user.get('/<int:id>')

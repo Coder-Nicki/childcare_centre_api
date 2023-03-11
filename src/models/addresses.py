@@ -10,8 +10,8 @@ class Address(db.Model):
     suburb = db.Column(db.String())
     state = db.Column(db.String())
     postcode = db.Column(db.String())
-    childcare_centre_id = db.Column(db.Integer(), db.ForeignKey("childcare_centres.id"), nullable=False)
+    # childcare_centre_id = db.Column(db.Integer(), db.ForeignKey("childcare_centres.id"), nullable=False)
 
-
+    childcare_centre = db.relationship('ChildcareCentre', backref='addresses')
 
     

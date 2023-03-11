@@ -32,7 +32,6 @@ def create_review():
 
         review = Review(**review_fields)
 
-    
         db.session.add(review)
         db.session.commit()
 

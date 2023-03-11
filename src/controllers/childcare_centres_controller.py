@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.childcare_centres import ChildcareCentre
+from models.addresses import Address
 from schemas.childcare_centres_schema import childcare_centre_schema, childcare_centres_schema
 from main import db
 from datetime import date
@@ -11,7 +12,8 @@ childcare_centre = Blueprint('childcare_centre', __name__, url_prefix="/childcar
 @childcare_centre.get('/')
 def get_childcare_centres():
     childcare_centres = ChildcareCentre.query.all()
-    return childcare_centres_schema.dump(childcare_centres)
+    result = childcare_centres_schema.dump(childcare_centres)
+    return result
 
 
 # Gets a specific childcare centre according to id
@@ -29,8 +31,8 @@ def get_childcare_centre(id):
 @childcare_centre.get('/cost_range')
 def order_childcare_centre_by_cost():
     cost_range = ChildcareCentre.query.order_by(ChildcareCentre.cost_per_day).all()
-    
     return childcare_centres_schema.dump(cost_range)
+    
 
 
 # Gets the ccheapest childcare centres and returns childcare details.
@@ -109,3 +111,13 @@ def delete_childcare_centre(id):
     db.session.commit()
 
     return {"message" : "Childcare centre removed successfully"}
+    
+    
+# @childcare_centre.get('/location')
+# def get_location():
+#     location = ChildcareCentre.query.join(Address).all()
+    
+#     # return jsonify(location)
+#     return childcare_centre_schema.dump(location)
+
+

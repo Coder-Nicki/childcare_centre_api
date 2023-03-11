@@ -5,6 +5,7 @@ class UserSchema(ma.Schema):
     
     class Meta:
         fields = ("id", "username", "password", "admin", "email")
+        load_only = ["admin", "password"]
 
     # childcare_centre = ma.List(ma.Nested("ChildcareCentreSchema", exclude=["user"]))
 

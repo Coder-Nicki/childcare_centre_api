@@ -12,12 +12,6 @@ def get_address(id):
     return address_schema.dump(address)
     
 
-# @address.get('/cc/<int:id>')
-# def get_address(id):
-#     address_fields = address_schema.load(request.json)
-#     address = Address.query.filter_by(id=fields["id"]).first()
-#     return jsonify("message")
-
 # Gets an address of a specific childcare centre and returns the address
 @address.get('/<int:childcare_centre_id>')
 def get_childcare_address(childcare_centre_id):
