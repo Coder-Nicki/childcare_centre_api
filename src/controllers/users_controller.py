@@ -53,18 +53,24 @@ def user_register():
         return abort(400, description="Username already taken")
 
     # Create the user object
-    user = User()
+    try:
+        user = User(**user_fields)
+        user.password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8")
+        # user = User()
+    
+        # user.username = user_fields["username"]
+    
+        # user.email = user_fields["email"]
+    
+        # user.password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8")
+    
+        # user.admin = user_fields["admin"]
+        db.session.add(user)
+        db.session.commit()
+    
+    except:
+        return { "message" : "Your information is incorrect"}
    
-    user.username = user_fields["username"]
-  
-    user.email = user_fields["email"]
-  
-    user.password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8")
-   
-    user.admin = user_fields["admin"]
-   
-    db.session.add(user)
-    db.session.commit()
     #create a variable that sets an expiry date
     expiry = timedelta(days=1)
     #create the access token
