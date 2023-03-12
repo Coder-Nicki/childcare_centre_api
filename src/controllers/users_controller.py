@@ -80,7 +80,8 @@ def user_login():
     user_fields = user_schema.load(request.json)
     #find the user in the database by email
     user = User.query.filter_by(email=user_fields["email"]).first()
-    # there is not a user with that email or if the password is no correct send an error
+
+    # there is not a user with that email or if the password is not correct send an error
     if not user or not bcrypt.check_password_hash(user.password, user_fields["password"]):
         return abort(401, description="Incorrect username and password")
     
@@ -92,8 +93,8 @@ def user_login():
     return jsonify({"username":user.username, "token": access_token })
 
 
-@user.route("/logout")
-def user_logout():
-    token = get_access_token()
-
-    pass
+# Need to do a logout feature
+# @user.route("/logout")
+# def user_logout():
+#     token = get_access_token()
+#     pass

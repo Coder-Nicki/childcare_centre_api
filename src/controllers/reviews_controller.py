@@ -13,7 +13,7 @@ def get_reviews():
     reviews = Review.query.all()
     return reviews_schema.dump(reviews)
 
-
+# Get review by childcare id and return childcare details and review
 @review.get('/<int:id>')
 def get_review(id):
     review = Review.query.get(id)
@@ -25,17 +25,17 @@ def get_review(id):
 
 
 @review.post("/")
-@jwt_required()
+# @jwt_required()
 def create_review():
-    try: 
-        review_fields = review_schema.load(request.json)
+    # try: 
+    review_fields = review_schema.load(request.json)
 
-        review = Review(**review_fields)
+    review = Review(**review_fields)
 
-        db.session.add(review)
-        db.session.commit()
+    db.session.add(review)
+    db.session.commit()
 
-    except:
-        return { "message" : "Your information is incorrect"}
+    # except:
+    #     return { "message" : "Your information is incorrect"}
 
     return review_schema.dump(review)
