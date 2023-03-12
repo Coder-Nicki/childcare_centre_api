@@ -1,6 +1,7 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, json
 from models.childcare_centres import ChildcareCentre
 from models.addresses import Address
+from models.users import User
 from schemas.childcare_centres_schema import childcare_centre_schema, childcare_centres_schema
 from main import db
 from datetime import date
@@ -15,6 +16,11 @@ def get_childcare_centres():
     result = childcare_centres_schema.dump(childcare_centres)
     return result
 
+@childcare_centre.get('/n')
+def get_childcare_centresn():
+    # childcare_addresses = ChildcareCentre.query.join(User).add_columns(ChildcareCentre.id, ChildcareCentre.name, User.id).filter(ChildcareCentre.id == User.id).all()
+    cc = db.session.query(ChildcareCentre).join(User).all()
+    return childcare_centres_schema.dump(cc)
 
 # Gets a specific childcare centre according to id
 @childcare_centre.get('/<int:id>')

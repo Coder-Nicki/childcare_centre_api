@@ -1,4 +1,4 @@
-from flask import Blueprint, request, abort, jsonify
+from flask import Blueprint, request, abort, jsonify, json
 from models.users import User
 from schemas.users_schema import user_schema, users_schema
 from main import db
@@ -8,20 +8,14 @@ from flask_jwt_extended import create_access_token
 
 user = Blueprint('user', __name__, url_prefix='/users')
 
-# Gets a list of all users and their details
+# Gets a list of all users and their details, excluding password
 @user.get('/')
 def get_users():
     users = User.query.all()
     return users_schema.dump(users)
 
-@user.get('/user_email')
-def get_user_email():
-    users = User.query.all()
-    list = users_schema.dump(users)
-    return jsonify(list[0]["email"])
 
-
-# Queries the database for a specifed user according to user.id
+# Queries the database for a specifed user according to user id and returns user details
 @user.get('/<int:id>')
 def get_user(id):
     user = User.query.get(id)
@@ -30,6 +24,17 @@ def get_user(id):
         return { "message" : "No user"}
 
     return user_schema.dump(user)
+
+
+# Queries the database for all admin users and returns details
+@user.get('/admins')
+def get_admin_users():
+    admin_users = User.query.filter(User.admin == True).all()
+
+    if not admin_users:
+        return { "message" : "No admins"}
+
+    return users_schema.dump(admin_users)
 
 
 # Registers a new user and provides an access token
@@ -89,4 +94,6 @@ def user_login():
 
 @user.route("/logout")
 def user_logout():
+    token = get_access_token()
+
     pass
