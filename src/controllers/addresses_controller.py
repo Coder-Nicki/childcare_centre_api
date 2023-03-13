@@ -29,7 +29,10 @@ def get_childcare_address(childcare_centre_id):
 # Gets all the childcare centre ids according to suburb and returns childcare centre details and address
 @address.get('/<string:suburb>')
 def get_childcares_in_a_suburb(suburb):
-    childcares = Address.query.filter(suburb="suburb").all()
+    childcares = Address.query.filter_by(suburb=suburb).all()
+
+    if not childcares:
+        return abort(404, "No childcares listed for this suburb")
 
     return addresses_schema.dump(childcares)
 
