@@ -11,26 +11,31 @@ address = Blueprint('address', __name__, url_prefix="/address")
 def get_address(id):
     address = Address.query.get(id)
     return address_schema.dump(address)
+
+@address.get('/')
+def get_addresses():
+    address = Address.query.all()
+    return addresses_schema.dump(address)
     
 
-# # Gets an address of a specific childcare centre and returns the address and childcare centre details
-# @address.get('/childcare_centre/<int:childcare_centre_id>')
-# def get_childcare_address(childcare_centre_id):
-#     address = Address.query.filter_by(childcare_centre_id=childcare_centre_id).first()
+# Gets an address of a specific childcare centre and returns the address and childcare centre details
+@address.get('/childcare_centre/<int:childcare_centre_id>')
+def get_childcare_address(childcare_centre_id):
+    address = Address.query.filter_by(childcare_centre_id=childcare_centre_id).first()
 
-#     return address_schema.dump(address)
-
-
-# # Gets all the childcare centre ids according to suburb and returns childcare centre details and address
-# @address.get('/<string:suburb>')
-# def get_childcares_in_a_suburb(suburb):
-#     childcares = Address.query.filter_by(suburb=suburb).all()
-
-#     return addresses_schema.dump(childcares)
+    return address_schema.dump(address)
 
 
-# # Post an address for a childcare_centre (Childcare_centre must be listed first)
-# # then returns the address with specific childcare details
+# Gets all the childcare centre ids according to suburb and returns childcare centre details and address
+@address.get('/<string:suburb>')
+def get_childcares_in_a_suburb(suburb):
+    childcares = Address.query.filter(suburb="suburb").all()
+
+    return addresses_schema.dump(childcares)
+
+
+# Post an address for a childcare_centre (Childcare_centre must be listed first)
+# then returns the address with specific childcare details
 
 @address.post("/")
 # @jwt_required()
