@@ -14,7 +14,7 @@ class ChildcareCentre(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=False)
 
 
-    review = db.relationship('Review', backref='childcare_centre')
+    # review = db.relationship('Review', backref='childcare_centre')
     address = db.relationship('Address', backref='childcare_centre')
 
     

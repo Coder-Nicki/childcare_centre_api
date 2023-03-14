@@ -2,7 +2,8 @@ from flask import Blueprint, request, jsonify, json, abort
 from models.childcare_centres import ChildcareCentre
 from models.addresses import Address
 from models.users import User
-from schemas.childcare_centres_schema import childcare_centre_schema, childcare_centres_schema, ChildcareCentreSchema
+from schemas.childcare_centres_schema import childcare_centre_schema, childcare_centres_schema
+from schemas.addresses_schema import address_schema, addresses_schema
 from main import db
 from datetime import date
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -13,6 +14,10 @@ childcare_centre = Blueprint('childcare_centre', __name__, url_prefix="/childcar
 @childcare_centre.get('/')
 def get_childcare_centres():
     childcare_centres = ChildcareCentre.query.all()
+
+    if not childcare_centres:
+        return { "message" : "No childcare centres listed"}, 404
+
     result = childcare_centres_schema.dump(childcare_centres)
     return result
 
@@ -23,7 +28,7 @@ def get_childcare_centre(id):
     childcare_centre = ChildcareCentre.query.get(id)
 
     if not childcare_centre:
-        return { "message" : "No childcare centre listed"}
+        return { "message" : "No childcare centre listed"}, 404
 
     return childcare_centre_schema.dump(childcare_centre)
 
@@ -32,6 +37,10 @@ def get_childcare_centre(id):
 @childcare_centre.get('/fee_range')
 def order_childcare_centre_by_cost():
     cost_range = ChildcareCentre.query.order_by(ChildcareCentre.cost_per_day).all()
+
+    if not cost_range:
+        return {"message" : "No childcares listed with fees"}, 404
+
     return childcare_centres_schema.dump(cost_range)
     
 
@@ -49,6 +58,8 @@ def get_cheapest_childcare_centre():
 def get_small_centres():
     small_centres = ChildcareCentre.query.filter(ChildcareCentre.maximum_capacity <= 50).order_by(ChildcareCentre.maximum_capacity).all()
     
+    if not small_centres:
+        return {"message" : "No childcare centres listed with a capacity under 50"}
     return childcare_centres_schema.dump(small_centres)
 
 
@@ -80,7 +91,7 @@ def create_childcare_centre():
         db.session.commit()
 
     except:
-        return { "message" : "Your information is incorrect"}
+        return { "message" : "Your information is incorrect"}, 400
 
     return childcare_centre_schema.dump(childcare_centre)
 
@@ -90,41 +101,42 @@ def create_childcare_centre():
 @childcare_centre.route("/<int:id>/", methods=["PUT"])
 @jwt_required()
 def update_childcare_centre(id):
-    user_id = get_jwt_identity()
+    # user_id = get_jwt_identity()
     
-    # Find it in the db
-    user = User.query.get(user_id)
+    # # Find it in the db
+    # user = User.query.get(user_id)
     
-    if not user.admin:
-        return abort(401, description="Unauthorised user")
+    # if not user.id
+    #     return abort(401, description="Unauthorised user")
     
     childcare = ChildcareCentre.query.get(id)
 
     if not childcare:
-        return {"message" : "No childcare listed"}
-    # try:
+        return {"message" : "No childcare listed"}, 404
 
-    name = request.json['name']
-    description = request.json['description']
-    phone_number = request.json['phone_number']
-    email_address = request.json['email_address']
-    user_id = request.json['user_id']
-    cost_per_day = request.json['cost_per_day']
-    maximum_capacity = request.json['maximum_capacity']
+    try:
 
-    childcare.name = name
-    childcare.phone_number = phone_number
-    childcare.email_address = email_address
-    childcare.maximum_capacity = maximum_capacity
-    childcare.cost_per_day = cost_per_day
-    childcare.description = description
-    childcare.user_id = user_id
+        name = request.json['name']
+        description = request.json['description']
+        phone_number = request.json['phone_number']
+        email_address = request.json['email_address']
+        user_id = request.json['user_id']
+        cost_per_day = request.json['cost_per_day']
+        maximum_capacity = request.json['maximum_capacity']
 
-    db.session.commit()
-    return childcare_centre_schema.jsonify(childcare)
+        childcare.name = name
+        childcare.phone_number = phone_number
+        childcare.email_address = email_address
+        childcare.maximum_capacity = maximum_capacity
+        childcare.cost_per_day = cost_per_day
+        childcare.description = description
+        childcare.user_id = user_id
 
-    # except:
-    #     return {"message" : "Your information is incorrect"}
+        db.session.commit()
+        return childcare_centre_schema.jsonify(childcare)
+
+    except:
+        return {"message" : "Your information is incorrect"}, 400
     
 
 
@@ -137,12 +149,12 @@ def delete_childcare_centre(id):
     childcare_centre = ChildcareCentre.query.get(id)
 
     if not childcare_centre:
-        return { "message" : "No childcare listed"}
+        return { "message" : "No childcare listed"}, 404
     
     db.session.delete(childcare_centre)
     db.session.commit()
 
-    return {"message" : "Childcare centre removed successfully"}
+    return {"message" : "Childcare centre removed successfully"}, 200
     
     
 # # Use a join table to get a list of childcares in a certain suburb under a price range.

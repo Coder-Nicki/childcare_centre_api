@@ -26,9 +26,9 @@ def get_review(id):
 # Get a list of reviews for a given childcare centre
 @review.get('/<int:childcare_centre_id>')
 def get_childcare_reviews(childcare_centre_id):
-    childcare_reviews = Review.query.filter(childcare_centre_id=childcare_centre_id).all
+    childcare_reviews = Review.query.filter(childcare_centre_id=childcare_centre_id).all()
 
-    return reviews_schema.dump(review)
+    return reviews_schema.dump(childcare_reviews)
 
 
 @review.post("/")

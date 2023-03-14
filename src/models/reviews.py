@@ -10,3 +10,5 @@ class Review(db.Model):
     date_posted = db.Column(db.Date())
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=False)
     childcare_centre_id = db.Column(db.Integer(), db.ForeignKey("childcare_centres.id"), nullable=False)
+
+    

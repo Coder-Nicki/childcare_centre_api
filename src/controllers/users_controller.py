@@ -1,10 +1,10 @@
-from flask import Blueprint, request, abort, jsonify, json
+from flask import Blueprint, request, abort, jsonify
 from models.users import User
 from schemas.users_schema import user_schema, users_schema
 from main import db
 from datetime import timedelta
 from main import bcrypt
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 
 user = Blueprint('user', __name__, url_prefix='/users')
 
@@ -12,6 +12,10 @@ user = Blueprint('user', __name__, url_prefix='/users')
 @user.get('/')
 def get_users():
     users = User.query.all()
+
+    if not users:
+        return { "message" : "No users listed"}
+    
     return users_schema.dump(users)
 
 
@@ -56,15 +60,7 @@ def user_register():
     try:
         user = User(**user_fields)
         user.password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8")
-        # user = User()
-    
-        # user.username = user_fields["username"]
-    
-        # user.email = user_fields["email"]
-    
-        # user.password = bcrypt.generate_password_hash(user_fields["password"]).decode("utf-8")
-    
-        # user.admin = user_fields["admin"]
+        
         db.session.add(user)
         db.session.commit()
     
@@ -97,6 +93,22 @@ def user_login():
     access_token = create_access_token(identity=str(user.id), expires_delta=expiry)
 
     return jsonify({"username":user.username, "token": access_token })
+
+
+# Deletes a user
+
+@user.delete('/<int:id>')
+@jwt_required()
+def delete_user(id):
+    user = User.query.get(id)
+
+    if not user:
+        return { "message" : "No user listed"}, 400
+    
+    db.session.delete(user)
+    db.session.commit()
+
+    return {"message" : "User removed successfully"}
 
 
 # Need to do a logout feature
