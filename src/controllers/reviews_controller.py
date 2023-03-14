@@ -31,6 +31,14 @@ def get_childcare_reviews(childcare_centre_id):
     return reviews_schema.dump(childcare_reviews)
 
 
+# Get a list of reviews for high parent ratings
+@review.get('/rating')
+def get_highest_parent_rating():
+    childcare_reviews = Review.query.filter(Review.parent_rating >= 8).all()
+
+    return reviews_schema.dump(childcare_reviews)
+
+
 @review.post("/")
 # @jwt_required()
 def create_review():
@@ -46,3 +54,19 @@ def create_review():
     #     return { "message" : "Your information is incorrect"}
 
     return review_schema.dump(review)
+
+
+# Deletes a childcare_centre post
+
+@review.delete('/<int:id>')
+@jwt_required()
+def delete_review(id):
+    review = Review.query.get(id)
+
+    if not review:
+        return { "message" : "No review listed"}, 404
+    
+    db.session.delete(review)
+    db.session.commit()
+
+    return {"message" : "Review removed successfully"}, 200
