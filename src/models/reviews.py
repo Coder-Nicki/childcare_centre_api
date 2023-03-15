@@ -7,7 +7,7 @@ class Review(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     comment = db.Column(db.String())
     parent_rating = db.Column(db.Integer())
-    date_posted = db.Column(db.Date())
+    date_posted = db.Column(db.Date(), nullable=False)
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=False)
     childcare_centre_id = db.Column(db.Integer(), db.ForeignKey("childcare_centres.id"), nullable=False)
 

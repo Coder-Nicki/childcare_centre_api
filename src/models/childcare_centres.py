@@ -15,6 +15,6 @@ class ChildcareCentre(db.Model):
 
 
     # review = db.relationship('Review', backref='childcare_centre')
-    address = db.relationship('Address', backref='childcare_centre')
+    address = db.relationship('Address', backref='childcare_centre', uselist=False)
 
     
