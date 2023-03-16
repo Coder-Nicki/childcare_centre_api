@@ -50,6 +50,9 @@ def order_childcare_centre_by_cost():
 def get_cheapest_childcare_centre():
     cheapest = ChildcareCentre.query.order_by(ChildcareCentre.cost_per_day).first()
     
+    if not cheapest:
+        return {"message" : "No childcare centres are listed yet"}, 404
+
     return childcare_centre_schema.dump(cheapest)
 
 
@@ -59,7 +62,8 @@ def get_small_centres():
     small_centres = ChildcareCentre.query.filter(ChildcareCentre.maximum_capacity <= 50).order_by(ChildcareCentre.maximum_capacity).all()
     
     if not small_centres:
-        return {"message" : "No childcare centres listed with a capacity under 50"}
+        return {"message" : "No childcare centres listed with a capacity under 50"}, 404
+
     return childcare_centres_schema.dump(small_centres)
 
 
@@ -70,6 +74,7 @@ def get_list_of_centres_under_capacity(maximum_capacity):
     
     if not list_of_centres_under_capacity:
         return {"message" : "No childcares listed under that capacity"}
+
     return childcare_centres_schema.dump(list_of_centres_under_capacity)
 
 # Creates a childcare centre post and then returns post. Must be logged in to post

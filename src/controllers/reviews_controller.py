@@ -28,13 +28,20 @@ def get_review(id):
 def get_childcare_reviews(childcare_centre_id):
     childcare_reviews = Review.query.filter(childcare_centre_id=childcare_centre_id).all()
 
+    if not childcare_reviews:
+        return { "message" : "No reviews posted for this childcare centre"}, 404
+
+
     return reviews_schema.dump(childcare_reviews)
 
 
-# Get a list of reviews for high parent ratings
+# Get a list of reviews for high parent ratings over 8.
 @review.get('/rating')
 def get_highest_parent_rating():
-    childcare_reviews = Review.query.filter(Review.parent_rating >= 8).all()
+    rating = Review.query.filter(Review.parent_rating >= 8).all()
+
+    if not rating:
+        return { "message" : "No childcares listed have a high parent rating"}, 404
 
     return reviews_schema.dump(childcare_reviews)
 
@@ -42,16 +49,16 @@ def get_highest_parent_rating():
 @review.post("/")
 # @jwt_required()
 def create_review():
-    # try: 
-    review_fields = review_schema.load(request.json)
+    try: 
+        review_fields = review_schema.load(request.json)
 
-    review = Review(**review_fields)
+        review = Review(**review_fields)
 
-    db.session.add(review)
-    db.session.commit()
+        db.session.add(review)
+        db.session.commit()
 
-    # except:
-    #     return { "message" : "Your information is incorrect"}
+    except:
+        return { "message" : "Your information is incorrect"}
 
     return review_schema.dump(review)
 

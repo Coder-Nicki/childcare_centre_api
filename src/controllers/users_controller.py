@@ -4,13 +4,20 @@ from schemas.users_schema import user_schema, users_schema
 from main import db
 from datetime import timedelta
 from main import bcrypt
-from flask_jwt_extended import create_access_token, jwt_required
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 user = Blueprint('user', __name__, url_prefix='/users')
 
 # Gets a list of all users and their details, excluding password
 @user.get('/')
+@jwt_required()
 def get_users():
+    # user_id = get_jwt_identity()
+    # user = User.query.get(user_id)
+    # admin_field = user.query.get(user.admin)
+    # if admin_fields:
+    #     return abort(401, description="Unauthorised User")
+
     users = User.query.all()
 
     if not users:
