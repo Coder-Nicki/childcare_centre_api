@@ -10,5 +10,5 @@ class User(db.Model):
     admin = db.Column(db.Boolean(), default=False)
     email = db.Column(db.String())
 
-    childcare_centre = db.relationship('ChildcareCentre', backref='user')
+    childcare_centre = db.relationship('ChildcareCentre', backref='user', cascade="all, delete")
     # review = db.relationship('Review', backref='user')

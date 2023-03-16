@@ -123,7 +123,6 @@ def seed_db():
     review1 = Review(
         comment = "The best centre ever. My kids love it here",
         parent_rating = 10,
-        date_posted = '2023/3/5',
         childcare_centre_id = 1,
         user_id = 2
     )
@@ -134,7 +133,6 @@ def seed_db():
     review2 = Review(
         comment = "Not happy with this centre. Very dirty.",
         parent_rating = 2,
-        date_posted = '2023/5/2',
         childcare_centre_id = 2,
         user_id = 3
     )
@@ -144,7 +142,6 @@ def seed_db():
     review3 = Review(
         comment = "The most amazing educators here.",
         parent_rating = 10,
-        date_posted = '2024/02/13',
         childcare_centre_id = 1,
         user_id = 1
     )
