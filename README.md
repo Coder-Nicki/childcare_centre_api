@@ -38,7 +38,7 @@ An ORM (Object Relational Mapping) is a way to connect an Object Orientated Prog
 
 An ORM uses much simpler methods to query the database. In this API project the Python programming language is used, therefore SQLAlchemy is a great choice for the ORM system. SQLAlchemy has great features and uses function-based query construction that allows SQL queries to be built similar to Python functions and expressions. SQLAlchemy can utilise the full range of functions to query a PostgreSQL database and can also use raw SQL statements if needed. In addition, SQLAlchemy uses composite behaviour and primary and foreign keys are represented in their own unique columns with the compatibility to ‘ON DELETE CASCADE and other tools and expressions for relationships within a database. (Features and Philosophy, n.d.)
 
-####Key functionality of an ORM:
+#### Key functionality of an ORM:
 -	Allows queries to be made to the database to manipulate the data using your program of choice, instead of plain SQL.
 -	ORMs generate objects which map to tables in the database.
 -	ORMs translate data/code and create a map that defines the database structure. The ORM can then explain how objects are related in different tables.
@@ -57,51 +57,51 @@ The disadvantages of using ORM tools are; it can be time consuming to learn, the
 #### User Endpoints:
 
 #### Public endpoints
-``` @user.get('/')``` - Gets a list of all users
-```@user.get('/<int:id>')``` - Finds a user by id number
-```@user.get('/admins')``` - Gets a list of all admin users
-```@user.route("/register", methods=["POST"])``` - creates a new user and logs them in
+- ``` @user.get('/')``` Gets a list of all users
+- ```@user.get('/<int:id>')``` Finds a user by id number
+- ```@user.get('/admins')``` Gets a list of all admin users
+- ```@user.route("/register", methods=["POST"])``` creates a new user and logs them in
 
 #### Protected endpoints
-```@user.route("/login", methods=["POST"])``` - logins in an already registered user
-```@user.delete('/<int:id>')``` - deletes a user
+- ```@user.route("/login", methods=["POST"])``` logins in an already registered user
+- ```@user.delete('/<int:id>')``` deletes a user
 
 #### Childcare Centre Endpoints:
 
 #### Public endpoints
-```@childcare_centre.get('/')``` - gets a list of all childcare centres
-```@childcare_centre.get('/<int:id>')``` - finds a childcare centre by id number
-```@childcare_centre.get('/fee_range')``` - lists the childcare centres from cheapest to most expensive
-```@childcare_centre.get('/cheapest')``` - finds the cheapest childcare centre
-```@childcare_centre.get('/small_centres')``` - gets a list of childcare centres that have a maximum capacity of under 50 kids
-```@childcare_centre.get('/maximum_capacity/<int:maximum_capacity>')``` - gets a list of childcare centres that have under a specified number of kids
+- ```@childcare_centre.get('/')``` gets a list of all childcare centres
+- ```@childcare_centre.get('/<int:id>')``` finds a childcare centre by id number
+- ```@childcare_centre.get('/fee_range')``` lists the childcare centres from cheapest to most expensive
+- ```@childcare_centre.get('/cheapest')``` finds the cheapest childcare centre
+- ```@childcare_centre.get('/small_centres')``` gets a list of childcare centres that have a maximum capacity of under 50 kids
+- ```@childcare_centre.get('/maximum_capacity/<int:maximum_capacity>')``` gets a list of childcare centres that have under a specified number of kids
 
 #### Protected endpoints
-```@childcare_centre.post("/")``` - post a new childcare centre
-```@childcare_centre.route("/<int:id>/", methods=["PUT"])``` - update the details of a childcare centre
-```@childcare_centre.delete('/<int:id>')``` - finds a given childcare centre and deletes it.
+- ```@childcare_centre.post("/")``` post a new childcare centre
+- ```@childcare_centre.route("/<int:id>/", methods=["PUT"])``` update the details of a childcare centre
+- ```@childcare_centre.delete('/<int:id>')``` finds a given childcare centre and deletes it.
 
 ### Review Routes:
 
 #### Public endpoints
-```@review.get('/')``` - gets a list of all reviews
-```@review.get('/<int:id>')``` - finds a review by id
-```@review.get('/<int:childcare_centre_id>')``` finds a re view by childcare centre id
-```@review.get('/rating')``` - gets a list of any childcare centres with a parent rating over 8
+- ```@review.get('/')``` gets a list of all reviews
+- ```@review.get('/<int:id>')``` finds a review by id
+- ```@review.get('/<int:childcare_centre_id>')``` finds a re view by childcare centre id
+- ```@review.get('/rating')``` gets a list of any childcare centres with a parent rating over 8
 
 #### Protected endpoints
-```@review.post("/")``` - posts a new review
-```@review.delete('/<int:id>')``` - finds a review by id and deletes it
+- ```@review.post("/")``` posts a new review
+- ```@review.delete('/<int:id>')``` finds a review by id and deletes it
 
 ### Address Routes
 
 #### Public endpoints
-```@address.get('/childcare_centre/<int:childcare_centre_id>')``` - finds an address by childcare centre id
-```@address.get('/<string:suburb>')``` - gets a list of childcare centres at a certain suburb
-```@address.get('/postcode/<string:postcode>')``` - gets a list of addresses from a specified suburb
+- ```@address.get('/childcare_centre/<int:childcare_centre_id>')``` finds an address by childcare centre id
+- ```@address.get('/<string:suburb>')``` gets a list of childcare centres at a certain suburb
+- ```@address.get('/postcode/<string:postcode>')``` gets a list of addresses from a specified suburb
 
 #### Protected endpoint
-```@address.post("/")``` - creates a new address
+- ```@address.post("/")``` creates a new address
 
 ### R6 	An ERD for your app
 
