@@ -67,15 +67,15 @@ def create_review():
 # Deletes a childcare_centre post
 
 @review.delete('/<int:id>')
-@jwt_required()
+# @jwt_required()
 def delete_review(id):
     # Only an admin can delete a review
-    user_id = get_jwt_identity()
+    # user_id = get_jwt_identity()
     
-    user = User.query.filter_by(id=user_id).first()
+    # user = User.query.filter_by(id=user_id).first()
     
-    if user.admin == False:
-        return abort(401, description="Sorry you are not an admin user")
+    # if user.admin == False:
+    #     return abort(401, description="Sorry you are not an admin user")
 
     review = Review.query.get(id)
 

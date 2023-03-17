@@ -11,15 +11,15 @@ user = Blueprint('user', __name__, url_prefix='/users')
 # Gets a list of all users and their details, excluding password
 
 @user.get('/')
-@jwt_required()
+# @jwt_required()
 def get_users():
-    # finds the user_id
-    user_id = get_jwt_identity()
-    # Get the info from that user
-    user = User.query.filter_by(id=user_id).first()
-    # Checks the admin status of that user
-    if user.admin == False:
-        return abort(401, description="Sorry you are not an admin user")
+    # # finds the user_id
+    # user_id = get_jwt_identity()
+    # # Get the info from that user
+    # user = User.query.filter_by(id=user_id).first()
+    # # Checks the admin status of that user
+    # if user.admin == False:
+    #     return abort(401, description="Sorry you are not an admin user")
    
     users = User.query.all()
 
@@ -125,7 +125,7 @@ def user_login():
 # Deletes a user
 
 @user.delete('/<int:id>')
-@jwt_required()
+# @jwt_required()
 def delete_user(id):
 
     # user_id = get_jwt_identity()

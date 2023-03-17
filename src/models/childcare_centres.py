@@ -11,10 +11,8 @@ class ChildcareCentre(db.Model):
     phone_number = db.Column(db.String())
     email_address = db.Column(db.String())
     description = db.Column(db.String())
-    user_id = db.Column(db.Integer(), db.ForeignKey("users.id"))
+    user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=True)
 
-
-    # review = db.relationship('Review', backref='childcare_centre')
-    address = db.relationship('Address', backref='childcare_centre', uselist=False)
+    address = db.relationship('Address', backref='childcare_centre', uselist=False, cascade="all, delete")
 
     

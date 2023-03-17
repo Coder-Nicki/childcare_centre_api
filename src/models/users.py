@@ -11,7 +11,7 @@ class User(db.Model):
     email = db.Column(db.String())
 
     childcare_centre = db.relationship('ChildcareCentre', backref='user', lazy=True)
-    review = db.relationship('Review', backref='user', cascade="all, delete")
+    review = db.relationship('Review', backref='user', cascade="all, delete-orphan")
 
-    #  cascade="all, delete-orphan"
+
 

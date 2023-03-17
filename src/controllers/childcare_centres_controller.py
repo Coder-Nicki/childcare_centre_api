@@ -2,8 +2,10 @@ from flask import Blueprint, request, jsonify, json, abort
 from models.childcare_centres import ChildcareCentre
 from models.addresses import Address
 from models.users import User
+from models.reviews import Review
 from schemas.childcare_centres_schema import childcare_centre_schema, childcare_centres_schema
 from schemas.addresses_schema import address_schema, addresses_schema
+from schemas.reviews_schema import review_schema, reviews_schema
 from main import db
 # from datetime import date
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -48,7 +50,9 @@ def order_childcare_centre_by_cost():
 # Gets the cheapest childcare centre and returns childcare details.
 @childcare_centre.get('/cheapest')
 def get_cheapest_childcare_centre():
-    cheapest = ChildcareCentre.query.order_by(ChildcareCentre.cost_per_day).first()
+    cheapest = ChildcareCentre.query\
+    .order_by(ChildcareCentre.cost_per_day)\
+    .first()
     
     if not cheapest:
         return {"message" : "No childcare centres are listed yet"}, 404
@@ -59,7 +63,10 @@ def get_cheapest_childcare_centre():
 # List the childcares that have a capacity under 50
 @childcare_centre.get('/small_centres')
 def get_small_centres():
-    small_centres = ChildcareCentre.query.filter(ChildcareCentre.maximum_capacity <= 50).order_by(ChildcareCentre.maximum_capacity).all()
+    small_centres = ChildcareCentre.query\
+    .filter(ChildcareCentre.maximum_capacity <= 50)\
+    .order_by(ChildcareCentre.maximum_capacity)\
+    .all()
     
     if not small_centres:
         return {"message" : "No childcare centres listed with a capacity under 50"}, 404
@@ -70,7 +77,10 @@ def get_small_centres():
 # List the childcares that have a capacity under the user's specified limit.
 @childcare_centre.get('/maximum_capacity/<int:maximum_capacity>')
 def get_list_of_centres_under_capacity(maximum_capacity):
-    list_of_centres_under_capacity = ChildcareCentre.query.filter(ChildcareCentre.maximum_capacity <= maximum_capacity).order_by(ChildcareCentre.maximum_capacity).all()
+    list_of_centres_under_capacity = ChildcareCentre.query\
+    .filter(ChildcareCentre.maximum_capacity <= maximum_capacity)\
+    .order_by(ChildcareCentre.maximum_capacity)\
+    .all()
     
     if not list_of_centres_under_capacity:
         return {"message" : "No childcares listed under that capacity"}
@@ -79,7 +89,7 @@ def get_list_of_centres_under_capacity(maximum_capacity):
 
 # Creates a childcare centre post and then returns post. Must be logged in to post
 @childcare_centre.post("/")
-@jwt_required()
+# @jwt_required()
 def create_childcare_centre():
     childcare_centre_fields = childcare_centre_schema.load(request.json)
 
@@ -89,14 +99,14 @@ def create_childcare_centre():
         # return an abort message to inform the user that a childcare listing already exists for this childcare
         return abort(400, description="Childcare centre already exists")
 
-    try: 
-        childcare_centre = ChildcareCentre(**childcare_centre_fields)
+    # try: 
+    childcare_centre = ChildcareCentre(**childcare_centre_fields)
         
-        db.session.add(childcare_centre)
-        db.session.commit()
+    db.session.add(childcare_centre)
+    db.session.commit()
 
-    except:
-        return { "message" : "Your information is incorrect"}, 400
+    # except:
+    #     return { "message" : "Your information is incorrect"}, 400
 
     return childcare_centre_schema.dump(childcare_centre)
 
@@ -104,7 +114,7 @@ def create_childcare_centre():
 # Update a childcare listing by id and return updated childcare details
 
 @childcare_centre.route("/<int:id>/", methods=["PUT"])
-@jwt_required()
+# @jwt_required()
 def update_childcare_centre(id):
     # user_id = get_jwt_identity()
     
@@ -149,15 +159,15 @@ def update_childcare_centre(id):
 # Deletes a childcare_centre post
 
 @childcare_centre.delete('/<int:id>')
-@jwt_required()
+# @jwt_required()
 def delete_childcare_centre(id):
     # Only an admin can delete a listing
-    user_id = get_jwt_identity()
+    # user_id = get_jwt_identity()
     
-    user = User.query.filter_by(id=user_id).first()
+    # user = User.query.filter_by(id=user_id).first()
     
-    if user.admin == False:
-        return abort(401, description="Sorry you are not an admin user")
+    # if user.admin == False:
+    #     return abort(401, description="Sorry you are not an admin user")
     childcare_centre = ChildcareCentre.query.get(id)
 
     if not childcare_centre:
@@ -168,11 +178,29 @@ def delete_childcare_centre(id):
 
     return {"message" : "Childcare centre removed successfully"}, 200
     
+
+# Get childcare centre listings according to suburb and display childcare info and address
+@childcare_centre.get("/address/<string:suburb>")
+def get_childcares_by_suburb(suburb):
+    result = db.session.query(ChildcareCentre)\
+    .join(Address)\
+    .filter(Address.suburb == suburb)\
+    .all()
+
+    if not result:
+        return abort(404, "No childcares listed for this suburb")
+
+    return childcare_centres_schema.dump(result)
     
-# # Use a join table to get a list of childcares in a certain suburb under a price range.
-# @childcare_centre.get('/help')
-# def get_help():
-#     result = db.session.execute('select ChildcareCentre.name, ChildcareCentre.cost_per_day, Address.suburb from ChildcareCentre, Address join ChildcareCentre on childcare_centres_id = childcare_centre_id where ChildcareCentre.cost_per_day < 100')
-#     return childcare_centres_schema.dump(result)
+# Use a join table to get a list of childcares in a certain suburb with a high parent rating.
+@childcare_centre.get('/help/<string:suburb>')
+def get_help(suburb):
+    result = db.session.query(ChildcareCentre)\
+    .join(Address)\
+    .join(Review)\
+    .filter(Address.suburb == suburb)\
+    .filter(Review.parent_rating >= 8)\
+    .all()
+    return childcare_centres_schema.dump(result)
 
 
