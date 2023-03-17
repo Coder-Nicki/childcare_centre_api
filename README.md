@@ -2,6 +2,10 @@
 
 ## Developed by Nicole Hulett
 
+[GitHub - Childcare Centre API](https://github.com/Coder-Nicki/childcare_centre_api)
+
+[Trello - Project Management](https://trello.com/b/tMMIqMil/childcare-centre-review-api)
+
 ### Instructions for installation:
 
 1. Click on link GitHub link above
@@ -148,7 +152,16 @@ To start with I made a list of the tasks that needed to be done for this project
 Once tasks were completed, I then added new ‘To Do’ cards to the ‘In Progress’ list and started working on them in the project. These cards often had a medium priority status. They involved setting up the models, schema and routes for each specific entity and then defining the relationships between entities. In hindsight, these tasks could have been broken down further as they were very large tasks to complete and took quite a bit of time. The low priority tasks were the last to be moved into the ‘In Progress’ list as these did not have a massive effect on the project and had no other tasks dependent on them be completed. However, they were still a requirement for the fully functioning project. 
 
 Slowly all task cards moved from ‘To Do, ‘In Progress’ and then to ‘Done’ as the project took shape. Along the way, new cards were created and added to the ‘In the future’ list as I thought of ways to extend my application if more time permitted. One day these can be moved to the ‘To Do’ list, but at this stage were not a requirement for the project. 
-	
+
+![screenshot of trello board](docs/first_screenshot.png)
+
+![screenshot of trello board](docs/second_screenshot.png)
+
+![screenshot of trello board](docs/third_screenshot.png)
+
+![screenshot of trello board](docs/task_screenshot.png)
+
+![screenshot of trello board](docs/task2_screenshot.png)
 ### References
 
 Abba, I. V. (2022, October 21). What is an ORM – The Meaning of Object Relational Mapping Database Tools. Retrieved from freeCodeCamp: https://www.freecodecamp.org/news/what-is-an-orm-the-meaning-of-object-relational-mapping-database-tools/
