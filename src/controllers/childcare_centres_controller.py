@@ -5,7 +5,7 @@ from models.users import User
 from schemas.childcare_centres_schema import childcare_centre_schema, childcare_centres_schema
 from schemas.addresses_schema import address_schema, addresses_schema
 from main import db
-from datetime import date
+# from datetime import date
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 childcare_centre = Blueprint('childcare_centre', __name__, url_prefix="/childcare_centres")
@@ -151,6 +151,13 @@ def update_childcare_centre(id):
 @childcare_centre.delete('/<int:id>')
 @jwt_required()
 def delete_childcare_centre(id):
+    # Only an admin can delete a listing
+    user_id = get_jwt_identity()
+    
+    user = User.query.filter_by(id=user_id).first()
+    
+    if user.admin == False:
+        return abort(401, description="Sorry you are not an admin user")
     childcare_centre = ChildcareCentre.query.get(id)
 
     if not childcare_centre:

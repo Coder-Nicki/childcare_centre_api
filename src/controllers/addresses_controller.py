@@ -5,26 +5,6 @@ from main import db
 from flask_jwt_extended import jwt_required
 
 address = Blueprint('address', __name__, url_prefix="/address")
-
-# Gets the address data from a specified id
-@address.get('/<int:id>')
-def get_address(id):
-    address = Address.query.get(id)
-
-    if not address:
-        return abort(404, "No address listed for this id")
-
-    return address_schema.dump(address)
-
-# Gets a list of all addresses
-@address.get('/')
-def get_addresses():
-    address = Address.query.all()
-
-    if not address:
-        return abort(404, "No addresses listed")
-
-    return addresses_schema.dump(address)
     
 
 # Gets an address of a specific childcare centre and returns the address and childcare centre details

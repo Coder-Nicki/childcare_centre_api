@@ -12,5 +12,5 @@ class Review(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=False)
     childcare_centre_id = db.Column(db.Integer(), db.ForeignKey("childcare_centres.id"), nullable=False)
 
-    user = db.relationship("User", backref="review", cascade="all, delete")
-    childcare_centre = db.relationship('ChildcareCentre', backref='review', cascade="all, delete")
+    # user = db.relationship("User", backref="review", cascade="all, delete")
+    childcare_centre = db.relationship('ChildcareCentre', backref='review')

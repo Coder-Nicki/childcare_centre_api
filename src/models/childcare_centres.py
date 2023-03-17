@@ -11,10 +11,10 @@ class ChildcareCentre(db.Model):
     phone_number = db.Column(db.String())
     email_address = db.Column(db.String())
     description = db.Column(db.String())
-    user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=False)
+    user_id = db.Column(db.Integer(), db.ForeignKey("users.id"))
 
 
     # review = db.relationship('Review', backref='childcare_centre')
-    address = db.relationship('Address', backref='childcare_centre', uselist=False, cascade="all, delete")
+    address = db.relationship('Address', backref='childcare_centre', uselist=False)
 
     

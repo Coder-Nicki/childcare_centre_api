@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from models.reviews import Review
+from models.users import User
 from schemas.reviews_schema import review_schema, reviews_schema
 from main import db
 from datetime import date
@@ -24,9 +25,9 @@ def get_review(id):
     return review_schema.dump(review)
 
 # Get a list of reviews for a given childcare centre
-@review.get('/<int:childcare_centre_id>')
+@review.get('/childcare_reviews/<int:childcare_centre_id>')
 def get_childcare_reviews(childcare_centre_id):
-    childcare_reviews = Review.query.filter(childcare_centre_id=childcare_centre_id).all()
+    childcare_reviews = Review.query.filter_by(childcare_centre_id=childcare_centre_id).all()
 
     if not childcare_reviews:
         return { "message" : "No reviews posted for this childcare centre"}, 404
@@ -68,6 +69,14 @@ def create_review():
 @review.delete('/<int:id>')
 @jwt_required()
 def delete_review(id):
+    # Only an admin can delete a review
+    user_id = get_jwt_identity()
+    
+    user = User.query.filter_by(id=user_id).first()
+    
+    if user.admin == False:
+        return abort(401, description="Sorry you are not an admin user")
+
     review = Review.query.get(id)
 
     if not review:

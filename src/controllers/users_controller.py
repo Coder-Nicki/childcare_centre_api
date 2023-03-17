@@ -1,23 +1,26 @@
 from flask import Blueprint, request, abort, jsonify
 from models.users import User
 from schemas.users_schema import user_schema, users_schema
-from main import db
 from datetime import timedelta
-from main import bcrypt
+from main import bcrypt, db
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+
 
 user = Blueprint('user', __name__, url_prefix='/users')
 
 # Gets a list of all users and their details, excluding password
+
 @user.get('/')
 @jwt_required()
 def get_users():
-    # user_id = get_jwt_identity()
-    # user = User.query.get(user_id)
-    # admin_field = user.query.get(user.admin)
-    # if admin_fields:
-    #     return abort(401, description="Unauthorised User")
-
+    # finds the user_id
+    user_id = get_jwt_identity()
+    # Get the info from that user
+    user = User.query.filter_by(id=user_id).first()
+    # Checks the admin status of that user
+    if user.admin == False:
+        return abort(401, description="Sorry you are not an admin user")
+   
     users = User.query.all()
 
     if not users:
@@ -28,7 +31,16 @@ def get_users():
 
 # Queries the database for a specifed user according to user id and returns user details
 @user.get('/<int:id>')
+@jwt_required()
 def get_user(id):
+   
+    user_id = get_jwt_identity()
+    
+    user = User.query.filter_by(id=user_id).first()
+    
+    if user.admin == False:
+        return abort(401, description="Sorry you are not an admin user")
+
     user = User.query.get(id)
 
     if not user:
@@ -39,7 +51,15 @@ def get_user(id):
 
 # Queries the database for all admin users and returns details
 @user.get('/admins')
+@jwt_required()
 def get_admin_users():
+    user_id = get_jwt_identity()
+    
+    user = User.query.filter_by(id=user_id).first()
+    
+    if user.admin == False:
+        return abort(401, description="Sorry you are not an admin user")
+
     admin_users = User.query.filter(User.admin == True).all()
 
     if not admin_users:
@@ -107,6 +127,14 @@ def user_login():
 @user.delete('/<int:id>')
 @jwt_required()
 def delete_user(id):
+
+    # user_id = get_jwt_identity()
+    
+    # user = User.query.filter_by(id=user_id).first()
+    
+    # if user.admin == False:
+    #     return abort(401, description="Sorry you are not an admin user")
+        
     user = User.query.get(id)
 
     if not user:
