@@ -106,6 +106,8 @@ The disadvantages of using ORM tools are; it can be time consuming to learn, the
 
 ### R6 	An ERD for your app
 
+![ERD diagram for the Childcare Centre API](docs/Childcare%20API%20diagram.png)
+
 ### R7 	Third party services that the app will use
 
 Flask – Flask is a lightweight WSGI web application framework that allows developers to easily develop web applications. It is simple to use, but also extensible, which means the developer can easily extend its functionality and scale it up for more complex applications. The Flask web framework is written in Python and includes a collection of libraries and modules that allow an application to be built without having to worry about the low-level details of a web application and other protocols. 
