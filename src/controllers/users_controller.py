@@ -125,15 +125,16 @@ def user_login():
 # Deletes a user
 
 @user.delete('/<int:id>')
-# @jwt_required()
+@jwt_required()
 def delete_user(id):
 
-    # user_id = get_jwt_identity()
+     # Only an admin can delete a listing
+    user_id = get_jwt_identity()
     
-    # user = User.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=user_id).first()
     
-    # if user.admin == False:
-    #     return abort(401, description="Sorry you are not an admin user")
+    if user.admin == False:
+        return abort(401, description="Sorry you are not an admin user")
         
     user = User.query.get(id)
 

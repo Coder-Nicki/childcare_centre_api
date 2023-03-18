@@ -15,5 +15,6 @@ class ChildcareCentre(db.Model):
 
     address = db.relationship('Address', backref='childcare_centre', uselist=False, cascade="all, delete")
     review = db.relationship('Review', backref='childcare_centre', lazy=True, cascade="all, delete")
+    vacancy = db.relationship('Vacancy', backref='childcare_centre', uselist=False, cascade="all, delete")
 
     
