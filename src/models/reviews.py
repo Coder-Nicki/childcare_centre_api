@@ -10,6 +10,6 @@ class Review(db.Model):
     parent_rating = db.Column(db.Integer())
     date_posted = db.Column(db.DateTime(), default=datetime.utcnow, nullable=False)
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=False)
-    childcare_centre_id = db.Column(db.Integer(), db.ForeignKey("childcare_centres.id"), nullable=False)
+    childcare_centre_id = db.Column(db.Integer(), db.ForeignKey("childcare_centres.id"), nullable=True)
 
-    childcare_centre = db.relationship('ChildcareCentre', backref='review')
+    # childcare_centre = db.relationship('ChildcareCentre', backref='review', lazy=True)

@@ -142,22 +142,19 @@ def update_childcare_centre(id):
     return childcare_centre_schema.jsonify(childcare)
 
    
-    
-
-
-
 # Deletes a childcare_centre post
 
 @childcare_centre.delete('/<int:id>')
-# @jwt_required()
+@jwt_required()
 def delete_childcare_centre(id):
     # Only an admin can delete a listing
-    # user_id = get_jwt_identity()
+    user_id = get_jwt_identity()
     
-    # user = User.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=user_id).first()
     
-    # if user.admin == False:
-    #     return abort(401, description="Sorry you are not an admin user")
+    if user.admin == False:
+        return abort(401, description="Sorry you are not an admin user")
+
     childcare_centre = ChildcareCentre.query.get(id)
 
     if not childcare_centre:
