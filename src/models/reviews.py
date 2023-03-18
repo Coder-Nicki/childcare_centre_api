@@ -12,4 +12,3 @@ class Review(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=False)
     childcare_centre_id = db.Column(db.Integer(), db.ForeignKey("childcare_centres.id"), nullable=True)
 
-    # childcare_centre = db.relationship('ChildcareCentre', backref='review', lazy=True)

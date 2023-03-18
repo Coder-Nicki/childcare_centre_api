@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, abort
 from models.vacancies import Vacancy
+from models.childcare_centres import ChildcareCentre
 from schemas.vacancies_schema import vacancy_schema, vacancies_schema
 from main import db
 from flask_jwt_extended import jwt_required
@@ -10,6 +11,12 @@ vacancy = Blueprint('vacancy', __name__, url_prefix="/vacancies")
 # Gets the vacancies of a specific childcare centre and returns the vacancy results 
 @vacancy.get('/<int:childcare_centre_id>')
 def get_childcare_vacancies(childcare_centre_id):
+    
+    childcare = ChildcareCentre.query.get(childcare_centre_id)
+    
+    if not childcare:
+        return {"message": "This childcare centre does not exist in our system"}, 400
+
     vacancy = Vacancy.query.filter_by(childcare_centre_id=childcare_centre_id).first()
 
     if not vacancy:
@@ -59,14 +66,18 @@ def create_vacancy():
 
 # Update a childcare's vacancy listing by childcare centre id and return updated vacancy details
 
-@vacancy.put("/<int:id>/")
+@vacancy.put("/<int:childcare_centre_id>/")
 # @jwt_required()
-def update_vacancies(id):
+def update_vacancies(childcare_centre_id):
+    childcare = ChildcareCentre.query.get(childcare_centre_id)
     
+    if not childcare:
+        return {"message": "This childcare centre does not exist in our system"}, 400
+
     # # Find it in the db
     vacancy_fields = vacancy_schema.load(request.json)
     
-    vacancy = Vacancy.query.get(id)
+    vacancy = Vacancy.query.get(childcare_centre_id)
 
     if not vacancy:
         return abort(404, description="No vacancy listed for this childcare centre")

@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, abort
 from models.addresses import Address
+from models.childcare_centres import ChildcareCentre
 from schemas.addresses_schema import address_schema, addresses_schema
 from main import db
 from flask_jwt_extended import jwt_required
@@ -10,6 +11,11 @@ address = Blueprint('address', __name__, url_prefix="/address")
 # Gets an address of a specific childcare centre and returns the address and childcare centre details
 @address.get('/childcare_centre/<int:childcare_centre_id>')
 def get_childcare_address(childcare_centre_id):
+    childcare = ChildcareCentre.query.get(childcare_centre_id)
+    
+    if not childcare:
+        return {"message": "This childcare centre does not exist in our system"}, 400
+
     address = Address.query.filter_by(childcare_centre_id=childcare_centre_id).first()
 
     if not address:

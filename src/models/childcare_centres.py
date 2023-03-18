@@ -13,8 +13,8 @@ class ChildcareCentre(db.Model):
     description = db.Column(db.String())
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"), nullable=True)
 
-    address = db.relationship('Address', backref='childcare_centre', uselist=False, cascade="all, delete")
+    address = db.relationship('Address', backref='childcare_centre', uselist=False, cascade="all, delete", lazy=True)
     review = db.relationship('Review', backref='childcare_centre', lazy=True, cascade="all, delete")
-    vacancy = db.relationship('Vacancy', backref='childcare_centre', uselist=False, cascade="all, delete")
+    vacancy = db.relationship('Vacancy', backref='childcare_centre', uselist=False, cascade="all, delete", lazy=True)
 
     
