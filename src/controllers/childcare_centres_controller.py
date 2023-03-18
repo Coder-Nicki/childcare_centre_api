@@ -7,10 +7,11 @@ from schemas.childcare_centres_schema import childcare_centre_schema, childcare_
 from schemas.addresses_schema import address_schema, addresses_schema
 from schemas.reviews_schema import review_schema, reviews_schema
 from main import db
-# from datetime import date
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+
 childcare_centre = Blueprint('childcare_centre', __name__, url_prefix="/childcare_centres")
+
 
 # Gets a list of all childcare centres posted and their details
 @childcare_centre.get('/')
@@ -83,7 +84,7 @@ def get_list_of_centres_under_capacity(maximum_capacity):
     .all()
     
     if not list_of_centres_under_capacity:
-        return {"message" : "No childcares listed under that capacity"}
+        return {"message" : "No childcares listed under that capacity"}, 404
 
     return childcare_centres_schema.dump(list_of_centres_under_capacity)
 
@@ -116,42 +117,31 @@ def create_childcare_centre():
 @childcare_centre.route("/<int:id>/", methods=["PUT"])
 # @jwt_required()
 def update_childcare_centre(id):
-    # user_id = get_jwt_identity()
     
     # # Find it in the db
-    # user = User.query.get(user_id)
-    
-    # if not user.id
-    #     return abort(401, description="Unauthorised user")
+    childcare_fields = childcare_centre_schema.load(request.json)
     
     childcare = ChildcareCentre.query.get(id)
 
     if not childcare:
-        return {"message" : "No childcare listed"}, 404
+        return abort(404, description="No childcare exists")
 
     try:
-
-        name = request.json['name']
-        description = request.json['description']
-        phone_number = request.json['phone_number']
-        email_address = request.json['email_address']
-        user_id = request.json['user_id']
-        cost_per_day = request.json['cost_per_day']
-        maximum_capacity = request.json['maximum_capacity']
-
-        childcare.name = name
-        childcare.phone_number = phone_number
-        childcare.email_address = email_address
-        childcare.maximum_capacity = maximum_capacity
-        childcare.cost_per_day = cost_per_day
-        childcare.description = description
-        childcare.user_id = user_id
-
-        db.session.commit()
-        return childcare_centre_schema.jsonify(childcare)
-
+        childcare.name = childcare_fields["name"]
+        childcare.cost_per_day = childcare_fields["cost_per_day"]
+        childcare.maximum_capacity = childcare_fields["maximum_capacity"]
+        childcare.phone_number = childcare_fields["phone_number"]
+        childcare.email_address = childcare_fields["email_address"]
+        childcare.description = childcare_fields["description"]
+        childcare.user_id = childcare_fields["user_id"]
+    
     except:
-        return {"message" : "Your information is incorrect"}, 400
+          return { "message" : "Your information is incorrect"}, 400
+
+    db.session.commit()
+    return childcare_centre_schema.jsonify(childcare)
+
+   
     
 
 

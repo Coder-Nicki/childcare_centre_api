@@ -11,7 +11,8 @@
 1. Click on link GitHub link above
 2. Clone the project to your local computer
 3. Create a virtual environment 
-4. Install the requirements text ```pip install requirements.txt``
+4. Install the requirements text 
+```pip install requirements.txt```
 5. Create the database (in psql)
     1. ```CREATE DATABASE childcare_api_db```
     2. 
