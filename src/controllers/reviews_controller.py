@@ -61,6 +61,7 @@ def create_review():
         review_fields = review_schema.load(request.json)
 
         review = Review(**review_fields)
+        # Ensures that rating is between 0 and 10
         if review.parent_rating > 10 or review.parent_rating < 0:
             return {"message" : "Parent rating must be between 0 and 10"}
         db.session.add(review)

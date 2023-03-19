@@ -42,7 +42,7 @@ def get_list_of_centres_with_a_vacancy():
 # Posts the vacancies for a childcare centre
 
 @vacancy.post("/")
-# @jwt_required()
+@jwt_required()
 def create_vacancy():
     
     vacancy_fields = vacancy_schema.load(request.json)
@@ -67,7 +67,7 @@ def create_vacancy():
 # Update a childcare's vacancy listing by childcare centre id and return updated vacancy details
 
 @vacancy.put("/<int:childcare_centre_id>/")
-# @jwt_required()
+@jwt_required()
 def update_vacancies(childcare_centre_id):
     childcare = ChildcareCentre.query.get(childcare_centre_id)
     

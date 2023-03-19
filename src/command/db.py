@@ -10,17 +10,22 @@ from main import bcrypt
 
 db_cmd = Blueprint("db", __name__)
 
-@db_cmd.cli.command('reset')
-def reset_db():
-    db.drop_all()
-    print('Tables are dropped!')
-    db.create_all()
-    print('Tables created')
+# @db_cmd.cli.command('reset')
+# def reset_db():
+#     db.drop_all()
+#     print('Tables are dropped!')
+#     db.create_all()
+#     print('Tables created')
 
 @db_cmd.cli.command('create')
 def create_db():
     db.create_all()
     print('Tables created')
+
+@db_cmd.cli.command('drop')
+def drop_db():
+    db.drop_all()
+    print('Tables are dropped!')
 
 
 @db_cmd.cli.command('seed')
@@ -192,7 +197,3 @@ def seed_db():
 
 
  
-@db_cmd.cli.command('drop')
-def drop_db():
-    db.drop_all()
-    print('Tables are dropped!')
