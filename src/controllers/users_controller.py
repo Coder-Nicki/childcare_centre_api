@@ -52,7 +52,7 @@ def get_user(id):
 def get_admin_users():
     # First checks to see if user is an admin user
     admin_only() 
-
+    
     admin_users = User.query.filter(User.admin == True).all()
 
     if not admin_users:

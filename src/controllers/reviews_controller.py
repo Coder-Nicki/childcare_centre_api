@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from models.reviews import Review
 from models.users import User
+from models.childcare_centres import ChildcareCentre
 from controllers.users_controller import admin_only
 from schemas.reviews_schema import review_schema, reviews_schema
 from main import db
