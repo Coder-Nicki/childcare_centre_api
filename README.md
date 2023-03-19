@@ -8,15 +8,26 @@
 
 ### Instructions for installation:
 
-1. Click on link GitHub link above
+1. Click on GitHub link [here](https://github.com/Coder-Nicki/childcare_centre_api) or above
+
 2. Clone the project to your local computer
+
 3. Create a virtual environment 
+- ```python3 -m venv .venv```
+- ```source .venv/bin/activate```
+
 4. Install the requirements text 
 ```pip install requirements.txt```
+
 5. Create the database (in psql)
-    1. ```CREATE DATABASE childcare_api_db```
-    2. 
+    1. ```sudo -u postgres psql```
+    2. ```CREATE DATABASE childcare_api_db;```
+    3. ```\c childcare_api_db;```
+    4. ```CREATE USER db_dev WITH PASSWORD 'tnsknt';```
+    5. ```GRANT ALL PRIVILEGES ON childcare_api_db to deb_dev;```
+
 6. Type ```Flask run``` in your command line
+
 7. Open up Insomnia or Postman to test out routes
 
 
@@ -40,7 +51,7 @@ Some disadvantages of PostgreSQL are;
 - Not all open-source applications will support a PostgreSQL database. (Sharda, 2021).
 
 Comparison to other DBMS:
-Other Database management systems are MySQL, Oracle, MongoDB, Cassandra and more. Databases are divided into two groups; relational databases and non-relational databases also referred to as SQL and NoSQL databases. PostgreSQL is a relational database system. Another similar relational database is MySQL. MySQL has a very plain structure and style that is very easy to learn and use and it has cloud compatibility. The drawbacks of MySQL is that it is owned by Oracle and is not completely open source like PostgreSQL. This means that there is not as much open source support and the developer will have to pay the corperate owners for support. MySQL is also not easily scalable, it will be a very complex effort to do so. Also MySQL doesn't completely follow SQL specific standards. MySQL is best for small web based solutions with a small volume of data. In comparison, PostgreSQL is completely open source and has a strong community where you can always expect free and prompt assistance. PostgreSQL also has better vertical scalabilty than MySQL which allows the database to grow if needed. 
+Other Database management systems are MySQL, Oracle, MongoDB, Cassandra and more. Databases are divided into two groups; relational databases and non-relational databases also referred to as SQL and NoSQL databases. PostgreSQL is a relational database system. Another similar relational database is MySQL. MySQL has a very plain structure and style that is very easy to learn and use and it has cloud compatibility. The drawbacks of MySQL is that it is owned by Oracle and is not completely open source like PostgreSQL. This means that there is not as much open source support and the developer will have to pay the corperate owners for support. MySQL is also not easily scalable, it will be a very complex effort to do so. Also MySQL doesn't completely follow SQL specific standards. MySQL is best for small web based solutions with a small volume of data. In comparison, PostgreSQL is completely open source and has a strong community where you can always expect free and prompt assistance. PostgreSQL also has better vertical scalabilty than MySQL which allows the database to grow if needed. (altexsoft, 2021)
 
 Overall, PostgreSQL is a great fit as a DBMS for this API project to store and query the data in an organised and defined way and has the potential to be able to scale larger if needed in the future. For a novice developer, there is also free community support available which is an added extra for this database design.
 
@@ -131,6 +142,8 @@ Marshmallow-SQLAlchemy – Marshmallow-SQLAlchemy is a package that allows SQLAl
 
 Flask-JWT-Extended – Flask-JWT-Extended adds support for using JSON Web Tokens. JSON web tokens are used in a Flask application for protecting routes and providing authentication to users. Flask-JWT-Extended has a lot of optional, but helpful features that you can use add to the project to make working with these tokens easier. 
 
+Datetime - Date was imported from the datetime package for this API to use in the Review class and model to allow an automatic date to be posted for the current day when the review is made.
+
 ### R8 	Describe your projects models in terms of the relationships they have with each other.
 
 The five models for this project are User, Childcare Centre, Address, Vacancy and Review.
@@ -183,6 +196,8 @@ Slowly all task cards moved from ‘To Do, ‘In Progress’ and then to ‘Done
 ### References
 
 Abba, I. V. (2022, October 21). What is an ORM – The Meaning of Object Relational Mapping Database Tools. Retrieved from freeCodeCamp: https://www.freecodecamp.org/news/what-is-an-orm-the-meaning-of-object-relational-mapping-database-tools/
+
+altexsoft. (2021, October 27). Comparing database management systems: MySQL, PostgreSQL, MSSQL Server, MongoDB, Elasticsearch, and others. Retrieved from altexsoft: https://www.altexsoft.com/blog/business/comparing-database-management-systems-mysql-postgresql-mssql-server-mongodb-elasticsearch-and-others/
 
 Features and Philosophy. (n.d.). Retrieved from SQLAlchemy: https://www.sqlalchemy.org/features.html
 
