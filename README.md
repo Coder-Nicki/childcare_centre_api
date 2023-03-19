@@ -8,23 +8,26 @@
 
 ### Instructions for installation:
 
-1. Click on GitHub link [here](https://github.com/Coder-Nicki/childcare_centre_api) or above
+1. Click on GitHub link [here](https://github.com/Coder-Nicki/childcare_centre_api) or above and then clone the project
 
-2. Clone the project to your local computer
+or
+
+2. Clone the project to your local computer by typing this line into the command line of VS code or similar
+```git clone git@github.com:Coder-Nicki/childcare_centre_api.git```
 
 3. Create a virtual environment 
 - ```python3 -m venv .venv```
 - ```source .venv/bin/activate```
 
 4. Install the requirements text 
-```pip install requirements.txt```
+```pip install requirements.txt``` (Windows)
 
 5. Create the database (in psql)
-    1. ```sudo -u postgres psql```
+    1. ```sudo -u postgres psql``` or ```psql```
     2. ```CREATE DATABASE childcare_api_db;```
     3. ```\c childcare_api_db;```
-    4. ```CREATE USER db_dev WITH PASSWORD 'tnsknt';```
-    5. ```GRANT ALL PRIVILEGES ON childcare_api_db to deb_dev;```
+    4. ```CREATE USER nicki_db_dev WITH PASSWORD 'ksnt23';```
+    5. ```GRANT ALL PRIVILEGES ON childcare_api_db to nicki_db_dev;```
 
 6. Type ```Flask run``` in your command line
 
@@ -125,6 +128,16 @@ The disadvantages of using ORM tools are; it can be time consuming to learn, the
 
 #### Protected endpoint
 - ```@address.post("/")``` creates a new address
+
+### Vacancy Routes
+
+#### Public endpoints
+- ```@vacancy.get('/<int:childcare_centre_id>')``` finds a childcare centres vacancy list
+- ```@vacancy.get('/')``` gets a list of all childcares with at least one vacancy
+
+#### Protected endpoint
+- ```@vacancy.post("/")``` creates a new vacancy for a childcare
+- ```@vacancy.put("/<int:childcare_centre_id>/")``` updates the vacancy post for a specific childcare
 
 ### R6 	An ERD for your app
 
