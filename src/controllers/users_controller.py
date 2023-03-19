@@ -8,18 +8,20 @@ from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identi
 
 user = Blueprint('user', __name__, url_prefix='/users')
 
+# Create a function to check whether a logged in user is an admin user or not
+def admin_only():
+    user_id = get_jwt_identity()
+    user = User.query.filter_by(id=user_id).first()
+    if user.admin == False:
+        return abort(401, description="Sorry you are not an admin user")
+
 # Gets a list of all users and their details, excluding password
 
 @user.get('/')
-# @jwt_required()
+@jwt_required()
 def get_users():
-    # # finds the user_id
-    # user_id = get_jwt_identity()
-    # # Get the info from that user
-    # user = User.query.filter_by(id=user_id).first()
-    # # Checks the admin status of that user
-    # if user.admin == False:
-    #     return abort(401, description="Sorry you are not an admin user")
+    
+    admin_only()
    
     users = User.query.all()
 
@@ -34,12 +36,7 @@ def get_users():
 @jwt_required()
 def get_user(id):
    
-    user_id = get_jwt_identity()
-    
-    user = User.query.filter_by(id=user_id).first()
-    
-    if user.admin == False:
-        return abort(401, description="Sorry you are not an admin user")
+    admin_only()
 
     user = User.query.get(id)
 
@@ -53,12 +50,8 @@ def get_user(id):
 @user.get('/admins')
 @jwt_required()
 def get_admin_users():
-    user_id = get_jwt_identity()
-    
-    user = User.query.filter_by(id=user_id).first()
-    
-    if user.admin == False:
-        return abort(401, description="Sorry you are not an admin user")
+    # First checks to see if user is an admin user
+    admin_only() 
 
     admin_users = User.query.filter(User.admin == True).all()
 
@@ -129,12 +122,7 @@ def user_login():
 def delete_user(id):
 
      # Only an admin can delete a listing
-    user_id = get_jwt_identity()
-    
-    user = User.query.filter_by(id=user_id).first()
-    
-    if user.admin == False:
-        return abort(401, description="Sorry you are not an admin user")
+    admin_only()
         
     user = User.query.get(id)
 
@@ -150,5 +138,4 @@ def delete_user(id):
 # Need to do a logout feature
 # @user.route("/logout")
 # def user_logout():
-#     token = get_access_token()
-#     pass
+#     return {"message" : "You have been logged out"}

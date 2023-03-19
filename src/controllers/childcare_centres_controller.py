@@ -3,6 +3,7 @@ from models.childcare_centres import ChildcareCentre
 from models.addresses import Address
 from models.users import User
 from models.reviews import Review
+from controllers.users_controller import admin_only
 from schemas.childcare_centres_schema import childcare_centre_schema, childcare_centres_schema
 from schemas.addresses_schema import address_schema, addresses_schema
 from schemas.reviews_schema import review_schema, reviews_schema
@@ -90,7 +91,7 @@ def get_list_of_centres_under_capacity(maximum_capacity):
 
 # Creates a childcare centre post and then returns post. Must be logged in to post
 @childcare_centre.post("/")
-# @jwt_required()
+@jwt_required()
 def create_childcare_centre():
     childcare_centre_fields = childcare_centre_schema.load(request.json)
 
@@ -100,14 +101,14 @@ def create_childcare_centre():
         # return an abort message to inform the user that a childcare listing already exists for this childcare
         return abort(400, description="Childcare centre already exists")
 
-    # try: 
-    childcare_centre = ChildcareCentre(**childcare_centre_fields)
-        
-    db.session.add(childcare_centre)
-    db.session.commit()
+    try: 
+        childcare_centre = ChildcareCentre(**childcare_centre_fields)
+            
+        db.session.add(childcare_centre)
+        db.session.commit()
 
-    # except:
-    #     return { "message" : "Your information is incorrect"}, 400
+    except:
+        return { "message" : "Your information is incorrect"}, 400
 
     return childcare_centre_schema.dump(childcare_centre)
 
@@ -115,7 +116,7 @@ def create_childcare_centre():
 # Update a childcare listing by id and return updated childcare details
 
 @childcare_centre.route("/<int:id>/", methods=["PUT"])
-# @jwt_required()
+@jwt_required()
 def update_childcare_centre(id):
     
     # # Find it in the db
@@ -148,12 +149,7 @@ def update_childcare_centre(id):
 @jwt_required()
 def delete_childcare_centre(id):
     # Only an admin can delete a listing
-    user_id = get_jwt_identity()
-    
-    user = User.query.filter_by(id=user_id).first()
-    
-    if user.admin == False:
-        return abort(401, description="Sorry you are not an admin user")
+    admin_only()
 
     childcare_centre = ChildcareCentre.query.get(id)
 
@@ -179,14 +175,14 @@ def get_childcares_by_suburb(suburb):
 
     return childcare_centres_schema.dump(result)
     
-# Use a join table to get a list of childcares in a certain suburb with a high parent rating.
+# Use a join table to get a list of childcares in a certain suburb with at least one high parent rating.
 @childcare_centre.get('/help/<string:suburb>')
 def get_help(suburb):
     result = db.session.query(ChildcareCentre)\
     .join(Address)\
     .join(Review)\
     .filter(Address.suburb == suburb)\
-    .filter(Review.parent_rating >= 8)\
+    .filter(Review.parent_rating == 10)\
     .all()
     return childcare_centres_schema.dump(result)
 

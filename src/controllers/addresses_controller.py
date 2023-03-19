@@ -50,7 +50,7 @@ def get_childcares_in_a_postcode(postcode):
 # then returns the address with specific childcare details
 
 @address.post("/")
-# @jwt_required()
+@jwt_required()
 def create_address():
     
     address_fields = address_schema.load(request.json)
@@ -62,7 +62,6 @@ def create_address():
     try:
         address = Address(**address_fields)
 
-    
         db.session.add(address)
         db.session.commit()
 

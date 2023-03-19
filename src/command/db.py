@@ -4,6 +4,7 @@ from models.users import User
 from models.childcare_centres import ChildcareCentre
 from models.addresses import Address
 from models.reviews import Review
+from models.vacancies import Vacancy
 from main import bcrypt
 
 
@@ -157,6 +158,37 @@ def seed_db():
 
     db.session.commit()
     print("Reviews are seeded")
+
+
+    vacancy1 = Vacancy(
+        baby_vacancies = True,
+        toddler_vacancies = False,
+        preschool_vacancies = True,
+        childcare_centre_id = 1
+    )
+    
+    db.session.add(vacancy1)
+
+    vacancy2 = Vacancy(
+        baby_vacancies = False,
+        toddler_vacancies = False,
+        preschool_vacancies = False,
+        childcare_centre_id = 2
+    )
+    
+    db.session.add(vacancy1)
+
+    vacancy3 = Vacancy(
+        baby_vacancies = True,
+        toddler_vacancies = True,
+        preschool_vacancies = True,
+        childcare_centre_id = 3
+    )
+    
+    db.session.add(vacancy3)
+
+    db.session.commit()
+    print("Vacancies are seeded")
 
 
  

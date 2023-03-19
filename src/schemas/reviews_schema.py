@@ -5,7 +5,7 @@ class ReviewSchema(ma.Schema):
         fields = ("id", "comment", "parent_rating", "date_posted", "user", "user_id", "childcare_centre", "childcare_centre_id")
         load_only = ["user_id", "childcare_centre_id"]
 
-    childcare_centre = ma.Nested("ChildcareCentreSchema", only=["name"])
+    childcare_centre = ma.Nested("ChildcareCentreSchema", only=["name", "phone_number"])
     user = ma.Nested("UserSchema", only=["username"])
 
 

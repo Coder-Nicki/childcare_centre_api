@@ -15,7 +15,7 @@ def get_childcare_vacancies(childcare_centre_id):
     childcare = ChildcareCentre.query.get(childcare_centre_id)
     
     if not childcare:
-        return {"message": "This childcare centre does not exist in our system"}, 400
+        return {"message": "This childcare centre does not exist in our system"}, 404
 
     vacancy = Vacancy.query.filter_by(childcare_centre_id=childcare_centre_id).first()
 

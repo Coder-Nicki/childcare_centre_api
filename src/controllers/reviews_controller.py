@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from models.reviews import Review
 from models.users import User
+from controllers.users_controller import admin_only
 from schemas.reviews_schema import review_schema, reviews_schema
 from main import db
 from datetime import date
@@ -27,11 +28,16 @@ def get_review(id):
 # Get a list of reviews for a given childcare centre
 @review.get('/childcare_reviews/<int:childcare_centre_id>')
 def get_childcare_reviews(childcare_centre_id):
+
+    childcare = ChildcareCentre.query.get(childcare_centre_id)
+    
+    if not childcare:
+        return {"message": "This childcare centre does not exist in our system"}, 404
+
     childcare_reviews = Review.query.filter_by(childcare_centre_id=childcare_centre_id).all()
 
     if not childcare_reviews:
         return { "message" : "No reviews posted for this childcare centre"}, 404
-
 
     return reviews_schema.dump(childcare_reviews)
 
@@ -48,7 +54,7 @@ def get_highest_parent_rating():
 
 
 @review.post("/")
-# @jwt_required()
+@jwt_required()
 def create_review():
     try: 
         review_fields = review_schema.load(request.json)
@@ -70,12 +76,7 @@ def create_review():
 @jwt_required()
 def delete_review(id):
     # Only an admin can delete a listing
-    user_id = get_jwt_identity()
-    
-    user = User.query.filter_by(id=user_id).first()
-    
-    if user.admin == False:
-        return abort(401, description="Sorry you are not an admin user")
+    admin_only()
 
     review = Review.query.get(id)
 
